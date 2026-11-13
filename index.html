@@ -476,6 +476,11 @@ $("#gal").addEventListener("click",e=>{const a=e.target.closest("a");if(!a||e.me
 $("#vx").onclick=closeV;vm.onclick=e=>{if(e.target===vm)closeV()};
 $("#vp").onclick=()=>openV(vi-1);$("#vn").onclick=()=>openV(vi+1);
 addEventListener("keydown",e=>{if(e.key==="Escape"&&vm.classList.contains("open"))closeV()});
+/* thumbnail otomatis dari TikTok (best effort). Jika gagal, placeholder/gambar manual di GALLERY tetap dipakai */
+GALLERY.forEach((g,k)=>{if(g.img)return;
+ fetch("https://www.tiktok.com/oembed?url="+encodeURIComponent(g.url)).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
+  if(!d.thumbnail_url)return;const a=$("#gal").children[k],im=new Image();im.referrerPolicy="no-referrer";im.alt="Postingan TikTok Lashsist "+(k+1);
+  im.onload=()=>{const em=a.querySelector("em");if(em)em.remove();a.prepend(im)};im.src=d.thumbnail_url}).catch(()=>{})});
 /* favicon dari logo */
 if(IMAGES.logo){const f=document.createElement("link");f.rel="icon";f.href=IMAGES.logo;document.head.appendChild(f)}
 </script>
